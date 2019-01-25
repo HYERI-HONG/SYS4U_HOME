@@ -15,10 +15,9 @@ public class RandomIntListMain {
 	public static void main(String[] args) throws Exception {
 		
 		List<Integer> randomIntList = new ArrayList<>();
+		ExecutorService threadPool = Executors.newCachedThreadPool();
 		
 		for(int i=0; i<100; i++) {
-			ExecutorService threadPool = Executors.newCachedThreadPool();
-			
 			Future<Integer> future = (Future<Integer>) threadPool.submit(new RandomIntThread());
 			randomIntList.add(future.get());
 		}
@@ -27,5 +26,6 @@ public class RandomIntListMain {
 		for(int i : randomIntList) {
 			System.out.println("N : "+i);	
 		}
+		threadPool.shutdown();
 	}
 }

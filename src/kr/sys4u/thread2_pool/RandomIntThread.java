@@ -1,13 +1,33 @@
 package kr.sys4u.thread2_pool;
 
-import java.util.concurrent.Callable;
+import java.util.List;
 
-public class RandomIntThread implements Callable<Integer> {
+public class RandomIntThread implements Runnable {
+
+	private List<Integer> randomIntList;
+	private int num;
+
+	public RandomIntThread(List<Integer> randomIntList) {
+		this.randomIntList = randomIntList;
+	}
 
 	@Override
-	public Integer call() throws Exception {
+	public void run() {
 
-		return (int) (Math.random() * 100);
-		
+		calcUniqueRandomInt((int) (Math.random() * 100));
+
+		synchronized (randomIntList) {
+			randomIntList.add(num);
+		}
+
+	}
+	private void calcUniqueRandomInt(int num) {
+
+		if (randomIntList.contains(num)) {
+			calcUniqueRandomInt((int) (Math.random() * 100));
+		} else {
+			this.num = num;
+		}
+
 	}
 }
