@@ -1,18 +1,19 @@
-package kr.sys4u.thread3.assignment2;
+package kr.sys4u.thread3.assignment3;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
 
 public class CallableUniqueNumberExecutor {
 
 	private ExecutorService executor;
-	private List<Integer> generated = new ArrayList<>();
+	private Set<Integer> generated = new TreeSet<>();
 
 	public void init() {
 		executor = Executors.newFixedThreadPool(50);
@@ -25,48 +26,42 @@ public class CallableUniqueNumberExecutor {
 		} catch (InterruptedException e) {
 
 		}
-
 	}
 
-	public void execute(List<CallableRandomNumberAdder> generators) throws Exception {
+	public void execute() throws Exception {
 
-		
-		generators.forEach(generator -> {
-			Future<Integer> future = null;
-			try {
-				do {
-					future = executor.submit(generator);
-				} while (generated.contains(future.get()));
-				generated.add(future.get());
+		while (generated.size() < 100) {
+			List<Future<Integer>> futures = new ArrayList<>();
 
-			} catch (Exception e) {
+			for (int i = 0; i < 50; i++) {
 
+				futures.add(executor.submit(new CallableRandomNumberAdder()));
 			}
-		});
+
+			for (Future<Integer> future : futures) {
+
+				if (generated.size() >= 100) {
+					break;
+				}
+				try {
+					generated.add(future.get());
+				} catch (Exception e) {
+				}
+			}
+		}
 	}
 
 	public static void main(String[] args) throws Exception {
-
-		final List<CallableRandomNumberAdder> generators = new ArrayList<>();
-		IntStream.range(0, 100).forEach(i -> generators.add(new CallableRandomNumberAdder()));
 
 		CallableUniqueNumberExecutor callableUniqueNumberExecutor = new CallableUniqueNumberExecutor();
 		callableUniqueNumberExecutor.init();
 
 		long startTime = System.nanoTime();
-		callableUniqueNumberExecutor.execute(generators);
+		callableUniqueNumberExecutor.execute();
 		System.out.println("Elapsted time = " + (System.nanoTime() - startTime) / 1000_000 + "ms");
-
 		callableUniqueNumberExecutor.shutdown();
 
-		// sorting
-		Collections.sort(callableUniqueNumberExecutor.generated);
-
-		// printing
 		callableUniqueNumberExecutor.generated.stream().forEach(System.out::println);
-		
-		System.out.println(System.currentTimeMillis()*1000);
-		System.out.println(System.nanoTime());
 
 	}
 }
