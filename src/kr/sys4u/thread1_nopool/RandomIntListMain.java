@@ -12,6 +12,7 @@ public class RandomIntListMain {
 	public static void main(String[] args) throws IOException, InterruptedException {
 		
 		List<Integer> randomIntList = new ArrayList<>();
+		long startTime = System.nanoTime();
 		
 		for(int i=0; i<100; i++) {
 			RandomIntThread r = new RandomIntThread();
@@ -26,5 +27,7 @@ public class RandomIntListMain {
 		for(int i : randomIntList) {
 			System.out.println("N : "+i);	
 		}
+		
+		System.out.println(System.nanoTime()-startTime);
 	}
 }
