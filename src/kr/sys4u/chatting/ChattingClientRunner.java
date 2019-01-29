@@ -13,75 +13,52 @@ import java.util.concurrent.ExecutorService;
 
 public class ChattingClientRunner implements Runnable {
 
-	final List<ChattingClientRunner> threads;
+	private ChattingServer server;
 	private Socket clientSocket;
 	private String userId, content;
 	private int option;
-	private ExecutorService executorService;
+	private ObjectInputStream in;
+	private DataOutputStream out;
 
-	public ChattingClientRunner(Socket clientSocket, List<ChattingClientRunner> runners, ExecutorService e) {
+
+	public ChattingClientRunner(Socket clientSocket, ChattingServer server) throws IOException {
 
 		this.clientSocket = clientSocket;
-		this.threads = runners;
-		this.executorService = e;
+		this.server = server;
+		this.in =  new ObjectInputStream(clientSocket.getInputStream());
+		this.out = new DataOutputStream(clientSocket.getOutputStream());
 
 	}
 
 	@Override
 	public void run() {
-
-		while (true) {
-			receive();
-			//decideAction();
 			
-		}
-
-	}
-
-	private void decideAction() {
-
-	}
-
-	private void broadcast() {
-
-		String time = new SimpleDateFormat("HH:mm").format(new Date());
-		String data = userId + " : " + content + " (" + time + ")";
-		System.out.println("[server]broadCast할 정보 :: " + content);
-
-		
-		synchronized (threads) {
-
-			for (ChattingClientRunner thread : threads) {
-				thread.send(data);
+			Message message;
+			String time = new SimpleDateFormat("HH:mm").format(new Date());
+			String sendData;
+			
+			while (true) {
+				
+				try {
+					message = (Message) in.readObject();
+					userId = message.getUserId();
+					content = message.getContent();
+					option = message.getOption();
+					
+				} catch (ClassNotFoundException e) {
+					
+				} catch (IOException e) {
+				}
+				
+				sendData = userId + " : " + content + " (" + time + ")";
+				server.broadCast(sendData);
+				
 			}
-		}
 	}
 
-	private void receive() {
-		try{
-			
-			ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
-			Message message = (Message) in.readObject();
-
-			userId = message.getUserId();
-			content = message.getContent();
-			option = message.getOption();
-			System.out.println("[server] 입력 아이디 :: " + userId);
-			System.out.println("[server] 입력 메세지 :: " + content);
-			System.out.println("[server] 입력 옵션 :: " + option);
-
-		} catch (IOException | ClassNotFoundException e) {
-
-		}finally {
-			broadcast();
-		}
-
-	}
-
-	private void send(String message) {
+	public void send(String message) {
 		try {
-			DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream());
-
+			
 			out.writeUTF(message);
 			out.flush();
 

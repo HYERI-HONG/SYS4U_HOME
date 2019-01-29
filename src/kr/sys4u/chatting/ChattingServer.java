@@ -2,6 +2,7 @@ package kr.sys4u.chatting;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -14,7 +15,7 @@ public class ChattingServer {
 	ServerSocket serverSocket;
 	ExecutorService threadPool;
 
-	final List<ChattingClientRunner> accessedClientList = new ArrayList<>();
+	public final List<ChattingClientRunner> accessedClientList = new ArrayList<>();
 
 	public ChattingServer(int port) {
 
@@ -46,9 +47,11 @@ public class ChattingServer {
 		
 		while (true) {
 			System.out.println("[Server] Watting...");
-			ChattingClientRunner runner = new ChattingClientRunner(serverSocket.accept(), accessedClientList,threadPool);
+			Socket clientSocket = serverSocket.accept();
+			ChattingClientRunner runner = new ChattingClientRunner(clientSocket, this);
 			accessedClientList.add(runner);
 			threadPool.execute(runner);
+			
 			if (serverSocket.isClosed()) {
 				close();
 			}
@@ -63,11 +66,16 @@ public class ChattingServer {
 		serverSocket.close();
 		System.out.println("[Server] Close the Server");
 	}
+	
+	public void broadCast(String message) {
+		for (ChattingClientRunner client : accessedClientList) {
+			client.send(message);
+		}
+	}
 
 	public static void main(String[] args) throws IOException {
 
 		int port = 9000;
-
 		ChattingServer chattingServer = new ChattingServer(port);
 		chattingServer.initialize();
 		chattingServer.execute();

@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class ChattingClient {
 
-	private final String userId = "User";
+	private final String userId = "User1";
 	private int port;
 	private String address;
 	private boolean initialized;
@@ -37,8 +37,6 @@ public class ChattingClient {
 
 		receive();
 		send();
-	
-
 	}
 
 	private void close() throws IOException {
@@ -51,11 +49,9 @@ public class ChattingClient {
 		new Thread(() -> {
 
 			try(DataInputStream in = new DataInputStream(socket.getInputStream());) {
-
 				while (true) {
 					System.out.println(in.readUTF());
 				}
-
 			} catch (IOException e) {
 
 			}
@@ -72,15 +68,11 @@ public class ChattingClient {
 				while (true) {
 					scan = new Scanner(System.in);
 					String content = scan.nextLine();
-					System.out.println(userId +" 입력 값 :: "+content);
 					message = new Message();
 					message.setContent(content);
 					message.setUserId(userId);
 					message.setOption(1);
 					
-					System.out.println("보내기 전 : "+message.getContent());
-					System.out.println("보내기 전 : "+message.getOption());
-					System.out.println("보내기 전 : "+message.getUserId());
 					out.writeObject(message);
 					out.flush();
 				}
@@ -94,7 +86,7 @@ public class ChattingClient {
 //				}
 		}).start();
 
-	}
+	} 
 
 	public static void main(String[] args) throws IOException {
 
