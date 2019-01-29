@@ -12,4 +12,5 @@ public class CallableRandomNumberAdder implements Callable<Integer>{
 		return new Random().nextInt(100);
 	}
 
+
 }
