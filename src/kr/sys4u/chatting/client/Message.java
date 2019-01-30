@@ -25,7 +25,7 @@ public class Message implements Serializable {
 		this.userId = userId;
 	}
 
-	public boolean isHasCommand() {
+	public boolean getHasCommand() {
 		return hasCommand;
 	}
 

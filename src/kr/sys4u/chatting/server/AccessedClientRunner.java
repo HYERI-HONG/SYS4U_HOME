@@ -14,19 +14,21 @@ public class AccessedClientRunner implements Runnable {
 	private Socket clientSocket;
 	private DataOutputStream out;
 	private ExecutorService executorService;
+	private ChattingRoomManager roomManager;
 
-	public AccessedClientRunner(Socket clientSocket, List<AccessedClientRunner> accessedClientList) throws IOException {
+	public AccessedClientRunner(Socket clientSocket, List<AccessedClientRunner> accessedClientList, ChattingRoomManager roomManager) throws IOException {
 
 		this.clientSocket = clientSocket;
 		this.accessedClientList = accessedClientList;
 		this.out = new DataOutputStream(clientSocket.getOutputStream());
 		this.executorService = Executors.newFixedThreadPool(10);
-
+		this.roomManager = roomManager;
 	}
 
 	@Override
 	public void run() {
 		
+		send("-------------Welcome To Chatting Program-------------\n");
 		executorService.submit(new ServerReceiver(clientSocket,this));
 	
 	}

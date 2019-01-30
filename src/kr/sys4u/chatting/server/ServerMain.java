@@ -2,20 +2,13 @@ package kr.sys4u.chatting.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class ServerMain {
 
-	private int port;
+	private final int port;
 	private boolean initialized;
-	ServerSocket serverSocket;
-	ExecutorService threadPool;
-
-	public final List<AccessedClientRunner> accessedClientList = new ArrayList<>();
+	private ServerSocket serverSocket;
+	
 
 	public ServerMain(int port) {
 
@@ -26,16 +19,12 @@ public class ServerMain {
 		this.initialized = false;
 	}
 
-	private void initialize() {
+	private void initialize() throws IOException {
 		if (initialized) {
 			return;
 		}
-		try {
-			this.serverSocket = new ServerSocket(port);
-		} catch (IOException e) {
-			
-		}
-		this.threadPool = Executors.newFixedThreadPool(10);
+		
+		this.serverSocket = new ServerSocket(port);
 		initialized = true;
 
 	}
@@ -44,17 +33,8 @@ public class ServerMain {
 		if (!initialized) {
 			initialize();
 		}
+		new AccessedClientManager(serverSocket).execute();
 		
-		while (true) {
-			System.out.println("[Server] Watting...");
-			Socket clientSocket = serverSocket.accept();
-			AccessedClientRunner runner = new AccessedClientRunner(clientSocket, accessedClientList);
-			synchronized (accessedClientList) {
-				accessedClientList.add(runner);
-			}
-			threadPool.execute(runner);
-		
-		}
 	}
 
 	private void close() throws IOException {
@@ -62,7 +42,6 @@ public class ServerMain {
 			initialize();
 		}
 		serverSocket.close();
-		System.out.println("[Server] Close the Server");
 	}
 
 	public static void main(String[] args) throws IOException {

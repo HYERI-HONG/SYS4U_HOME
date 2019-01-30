@@ -29,6 +29,12 @@ public class ServerReceiver implements Runnable{
 			while(true) {
 				time = new SimpleDateFormat("mm:ss a").format(new Date());
 				Message messageObject = (Message) in.readObject();
+				
+				if(messageObject.getHasCommand()) {
+					new DecitionMaker();
+					continue;
+					
+				}
 				returnMessage = messageObject.getUserId()+" : "+ messageObject.getMessage()+ " (" + time + ")";
 				runner.broadCast(returnMessage);
 				
