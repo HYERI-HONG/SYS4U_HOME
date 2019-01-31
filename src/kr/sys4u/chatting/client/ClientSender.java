@@ -10,9 +10,10 @@ package kr.sys4u.chatting.client;
  * 1. roomlist : 채팅방 목록 보기
  * 2. makeroom/room이름 : 채팅방 만들기
  * 3. joinroom/room이름  : 채팅방 참여하기
- * 4. userlist : 채팅방 참여 사용자 명단 보기
- * 5. exitroom : 채팅방 나가기
- * 6. exit : 접속 종료
+ * 4. removeroom/room이름 : 채팅방 삭제하기
+ * 5. userlist : 채팅방 참여 사용자 명단 보기
+ * 6. exitroom : 채팅방 나가기
+ * 7. exit : 접속 종료
  * 
  * */
 import java.io.IOException;

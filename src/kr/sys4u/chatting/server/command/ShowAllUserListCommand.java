@@ -3,14 +3,14 @@ package kr.sys4u.chatting.server.command;
 import java.net.Socket;
 import java.util.List;
 import kr.sys4u.chatting.client.Message;
-import kr.sys4u.chatting.server.AccessedClientRunner;
+import kr.sys4u.chatting.server.AccessedClient;
 import kr.sys4u.chatting.server.ServerSender;
 
 public class ShowAllUserListCommand implements CommandProcessor {
 
-	private final AccessedClientRunner runner;
+	private final AccessedClient runner;
 
-	public ShowAllUserListCommand(AccessedClientRunner runner) {
+	public ShowAllUserListCommand(AccessedClient runner) {
 		this.runner = runner;
 	}
 

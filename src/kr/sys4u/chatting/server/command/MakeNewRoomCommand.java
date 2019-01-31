@@ -3,14 +3,14 @@ package kr.sys4u.chatting.server.command;
 import java.net.Socket;
 
 import kr.sys4u.chatting.client.Message;
-import kr.sys4u.chatting.server.AccessedClientRunner;
+import kr.sys4u.chatting.server.AccessedClient;
 import kr.sys4u.chatting.server.ChattingRoom;
 
 public class MakeNewRoomCommand implements CommandProcessor{
 	
-	private final AccessedClientRunner runner;
+	private final AccessedClient runner;
 	
-	public MakeNewRoomCommand(AccessedClientRunner runner) {
+	public MakeNewRoomCommand(AccessedClient runner) {
 		this.runner = runner;
 	}
 

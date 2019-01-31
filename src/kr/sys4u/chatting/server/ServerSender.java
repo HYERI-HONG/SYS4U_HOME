@@ -8,9 +8,9 @@ import java.util.List;
 
 public class ServerSender {
 	
-	private final AccessedClientRunner runner;
+	private final AccessedClient runner;
 	
-	public ServerSender(AccessedClientRunner runner) {
+	public ServerSender(AccessedClient runner) {
 		this.runner = runner;
 	}
 

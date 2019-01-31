@@ -12,12 +12,13 @@ public class AccessedClientsManager {
 	
 	private final ServerSocket socket;
 	private final ExecutorService threadPool;
-	private final List<Socket> accessedClientList = new ArrayList<>();
+	private final List<Socket> accessedClientList;
 	private final ChattingRoomManager chattingRoomManager;
 	
 	public AccessedClientsManager(ServerSocket socket) {
-		this.threadPool = Executors.newFixedThreadPool(10);
 		this.socket = socket;
+		this.threadPool = Executors.newFixedThreadPool(10);
+		this.accessedClientList = new ArrayList<>();
 		this.chattingRoomManager = new ChattingRoomManager();
 		
 	}
@@ -25,14 +26,13 @@ public class AccessedClientsManager {
 	public void execute() throws IOException {
 		
 		while (true) {
+			
 			Socket clientSocket = socket.accept();
-			AccessedClientRunner runner = new AccessedClientRunner(clientSocket, accessedClientList, chattingRoomManager);
+			AccessedClient client = new AccessedClient(clientSocket, accessedClientList, chattingRoomManager);
 			synchronized (accessedClientList) {
 				accessedClientList.add(clientSocket);
 			}
-			
-			threadPool.execute(runner);
-		
+			threadPool.execute(client);
 		}
 	}
 }

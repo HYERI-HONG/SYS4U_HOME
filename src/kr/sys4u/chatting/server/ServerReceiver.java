@@ -2,47 +2,48 @@ package kr.sys4u.chatting.server;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import kr.sys4u.chatting.client.Message;
 import kr.sys4u.chatting.server.command.CommandProcessor;
-import kr.sys4u.chatting.server.command.DecitionMaker;
+import kr.sys4u.chatting.server.command.CommandIdentifier;
 
 public class ServerReceiver implements Runnable {
 
 	private final Socket clientSocket;
-	private final AccessedClientRunner runner;
-	private final DecitionMaker decitionMaker;
+	private final AccessedClient runner;
+	private final CommandIdentifier identifier;
 
-	public ServerReceiver(Socket clientSocket, AccessedClientRunner runner) {
+	public ServerReceiver(Socket clientSocket, AccessedClient runner) {
 		this.clientSocket = clientSocket;
 		this.runner = runner;
-		this.decitionMaker = new DecitionMaker(runner);
+		this.identifier = new CommandIdentifier(runner);
 	}
 
 	@Override
 	public void run() {
 
-		String returnMessage = "";
-		String time;
 
 		try {
 			ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream());
+			
+			String returnMessage = "";
+			String time;
+			
 			while (true) {
-				time = new SimpleDateFormat("mm:ss a").format(new Date());
-				Message messageObject = (Message) in.readObject();
 				
-				if (messageObject.getHasCommand() == true) {
+				Message messageObject = (Message) in.readObject();
+				if (messageObject.getHasCommand()) {
 
-					CommandProcessor processor = decitionMaker.getMap()
+					CommandProcessor processor = identifier.getMap()
 							.get(getCommandFromMessage(messageObject.getMessage()));
 					processor.process(clientSocket, messageObject);
 					continue;
 
 				}
+				
+				time = new SimpleDateFormat("mm:ss a").format(new Date());
 				returnMessage = messageObject.getUserId() + " : " + messageObject.getMessage() + " (" + time + ")";
 				new ServerSender(runner).sendAll(returnMessage);
 				runner.setUserId(messageObject.getUserId());
@@ -56,7 +57,9 @@ public class ServerReceiver implements Runnable {
 
 	public String getCommandFromMessage(String message) {
 
-		return message.contains("/") ? message.split("/")[0] : message;
+		String command = message.contains("/") ? message.split("/")[0] : message;
+		System.out.println("command : "+command);
+		return command;
 
 	}
 

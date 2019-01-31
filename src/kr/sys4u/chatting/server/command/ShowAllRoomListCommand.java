@@ -3,15 +3,15 @@ package kr.sys4u.chatting.server.command;
 import java.net.Socket;
 
 import kr.sys4u.chatting.client.Message;
-import kr.sys4u.chatting.server.AccessedClientRunner;
+import kr.sys4u.chatting.server.AccessedClient;
 import kr.sys4u.chatting.server.ChattingRoom;
 import kr.sys4u.chatting.server.ServerSender;
 
 public class ShowAllRoomListCommand implements CommandProcessor {
 
-	private final AccessedClientRunner runner;
+	private final AccessedClient runner;
 
-	public ShowAllRoomListCommand(AccessedClientRunner runner) {
+	public ShowAllRoomListCommand(AccessedClient runner) {
 		this.runner = runner;
 	}
 

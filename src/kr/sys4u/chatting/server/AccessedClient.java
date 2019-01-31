@@ -2,29 +2,30 @@ package kr.sys4u.chatting.server;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class AccessedClientRunner implements Runnable {
+public class AccessedClient implements Runnable {
 
-	private List<Socket> accessedClientsSocketList = new ArrayList<>();
 	private Socket clientSocket;
+	private List<Socket> chattingHomeUsersList;
 	private ExecutorService executorService;
-	private ChattingRoomManager roomManager;
 	
+	private ChattingRoomManager roomManager;
 	private String joinRoomName;
 	private String userId;
 
-	public AccessedClientRunner(Socket clientSocket, List<Socket> accessedClientsSocketList,
+	public AccessedClient(Socket clientSocket, List<Socket> accessedClientsSocketList,
 			ChattingRoomManager roomManager) throws IOException {
 
 		this.clientSocket = clientSocket;
-		this.accessedClientsSocketList = accessedClientsSocketList;
+		this.chattingHomeUsersList = accessedClientsSocketList;
 		this.executorService = Executors.newFixedThreadPool(10);
+		
 		this.roomManager = roomManager;
 		this.joinRoomName = "home";
+		this.userId = "unsigned";
 	}
 
 	@Override
@@ -40,7 +41,7 @@ public class AccessedClientRunner implements Runnable {
 	}
 
 	public List<Socket> getAccessedClientsSocketList() {
-		return accessedClientsSocketList;
+		return chattingHomeUsersList;
 	}
 
 	public String getJoinRoomName() {

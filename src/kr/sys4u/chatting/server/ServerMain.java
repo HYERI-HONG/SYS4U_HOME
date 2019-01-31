@@ -35,9 +35,11 @@ public class ServerMain {
 		}
 		new AccessedClientsManager(serverSocket).execute();
 		
+		if(serverSocket.isClosed()) {
+			close();
+		}
 	}
 
-	@SuppressWarnings("unused")
 	private void close() throws IOException {
 		if (!initialized) {
 			initialize();
