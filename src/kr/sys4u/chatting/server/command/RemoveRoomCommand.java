@@ -20,5 +20,4 @@ public class RemoveRoomCommand implements CommandProcessor{
 			runner.getRoomManager().getRoomList().remove(runner.getRoomManager().findRoom(message.getMessage()));
 		}
 	}
-	
 }
