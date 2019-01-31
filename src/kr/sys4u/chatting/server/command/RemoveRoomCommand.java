@@ -1,7 +1,7 @@
 package kr.sys4u.chatting.server.command;
 
 import java.net.Socket;
-import kr.sys4u.chatting.client.Message;
+import kr.sys4u.chatting.server.Message;
 import kr.sys4u.chatting.server.*;
 
 public class RemoveRoomCommand implements CommandProcessor{

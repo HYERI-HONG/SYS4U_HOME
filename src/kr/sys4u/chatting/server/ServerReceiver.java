@@ -5,7 +5,7 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import kr.sys4u.chatting.client.Message;
+import kr.sys4u.chatting.server.Message;
 import kr.sys4u.chatting.server.command.CommandProcessor;
 import kr.sys4u.chatting.server.command.CommandIdentifier;
 
