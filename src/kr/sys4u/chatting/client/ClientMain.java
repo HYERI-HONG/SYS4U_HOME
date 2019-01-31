@@ -44,20 +44,16 @@ public class ClientMain {
 
 	}
 
-	public void close() throws IOException {
-
-		socket.close();
-	}
-
 	public static void main(String[] args) throws IOException {
 
 		int port = 9000;
 		String address = "127.0.0.1";
-		String user1 = "hong";
+		String user1 = "hyeri";
+		//String user1 = "joori";
 
 		ClientMain chattingClient = new ClientMain(port, address, user1);
 		chattingClient.initialize();
 		chattingClient.execute();
-		//chattingClient.close();
+		
 	}
 }

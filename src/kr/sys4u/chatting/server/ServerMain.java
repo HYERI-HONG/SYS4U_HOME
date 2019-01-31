@@ -33,10 +33,11 @@ public class ServerMain {
 		if (!initialized) {
 			initialize();
 		}
-		new AccessedClientManager(serverSocket).execute();
+		new AccessedClientsManager(serverSocket).execute();
 		
 	}
 
+	@SuppressWarnings("unused")
 	private void close() throws IOException {
 		if (!initialized) {
 			initialize();

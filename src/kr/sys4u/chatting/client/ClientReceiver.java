@@ -15,7 +15,8 @@ public class ClientReceiver implements Runnable {
 	@Override
 	public void run() {
 
-		try (DataInputStream in = new DataInputStream(socket.getInputStream());) {
+		try{
+			DataInputStream in = new DataInputStream(socket.getInputStream());
 			while(true) {
 				System.out.println(in.readUTF());
 			}
