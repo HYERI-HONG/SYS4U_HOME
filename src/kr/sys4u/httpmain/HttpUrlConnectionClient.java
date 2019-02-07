@@ -18,17 +18,18 @@ public class HttpUrlConnectionClient {
 			String apiURL = "https://www.naver.com";
 			URL url = new URL(apiURL);
 
-			HttpURLConnection con = (HttpURLConnection) url.openConnection();
-			con.setRequestMethod("GET");
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setRequestMethod("GET");
 
-			int responseCode = con.getResponseCode();
+			int responseCode = connection.getResponseCode();
 			BufferedReader in;
+			
 			if (responseCode == 200) {
-				in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+				in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 			} else {
-				in = new BufferedReader(new InputStreamReader(con.getErrorStream()));
+				in = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
 			}
-
+	
 			String inputLine;
 			StringBuilder response = new StringBuilder();
 			while ((inputLine = in.readLine()) != null) {
