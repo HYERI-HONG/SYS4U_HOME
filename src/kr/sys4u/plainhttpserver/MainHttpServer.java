@@ -5,7 +5,9 @@ import java.net.ServerSocket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class PlainHttpServer {
+import kr.sys4u.plainhttpserver.exception.CanNotConnectToClientException;
+
+public class MainHttpServer {
 
 	private final static int PORT = 1989;
 
@@ -13,7 +15,7 @@ public class PlainHttpServer {
 	private ServerSocket serverSocket;
 	private final ExecutorService executorService;
 
-	public PlainHttpServer() {
+	public MainHttpServer() {
 		this.initialized = false;
 		this.executorService = Executors.newFixedThreadPool(10);
 	}
@@ -36,26 +38,34 @@ public class PlainHttpServer {
 		while (true) {
 			
 			try {
-				PlainHttpThread thread = new PlainHttpThread(serverSocket.accept());
+				RunnableHttpServer thread = new RunnableHttpServer(serverSocket.accept());
 				System.out.println("client connected");
 				executorService.execute(thread);
 				
 			} catch (IOException e) {
-				e.printStackTrace();
+				throw new CanNotConnectToClientException();
+			}
+			if(serverSocket.isClosed()) {
+				close();
 			}
 		}
 	}
 
 	public void close() throws IOException {
+		
+		if (!initialized) {
+			initilize();
+		}
+		
 		serverSocket.close();
 	}
 
 	public static void main(String[] args) throws IOException {
 
-		PlainHttpServer server = new PlainHttpServer();
+		MainHttpServer server = new MainHttpServer();
 		server.initilize();
 		server.execute();
-		//server.close();
+		
 
 	}
 }
